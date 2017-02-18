@@ -17,6 +17,7 @@ import Footer from '../Footer';
 class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
+    // data: PropTypes.object.isRequired,
   };
 
   render() {

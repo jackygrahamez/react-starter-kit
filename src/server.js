@@ -29,6 +29,8 @@ import routes from './routes';
 import assets from './assets.json'; // eslint-disable-line import/no-unresolved
 import { port, auth } from './config';
 
+// console.log(JSON.stringify(routes));
+
 const app = express();
 
 //

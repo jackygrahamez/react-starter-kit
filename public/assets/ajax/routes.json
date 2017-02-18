@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "items": [{
+      "path": "/",
+      "page": "./home",
+      "chunk": "main",
+      "data": {
+        "articles": "GET https://gist.githubusercontent.com/koistya/a32919e847531320675764e7308b796a/raw/articles.json"
+      }
+    },
+    {
+      "path": "/error",
+      "page": "./error",
+      "chunk": "main"
+    },
+    {
+      "path": "/about",
+      "page": "./about"
+    },
+    {
+      "path": "/admin",
+      "page": "./admin"
+    },
+    {
+      "path": "/contact",
+      "page": "./contact"
+    },
+    {
+      "path": "/login",
+      "page": "./login"
+    },
+    {
+      "path": "/notFound",
+      "page": "./notFound"
+    },
+    {
+      "path": "/privacy",
+      "page": "./privacy"
+    },
+    {
+      "path": "/register",
+      "page": "./register"
+    },
+    {
+      "path": "/tasks/:status(pending|completed)?",
+      "page": "./home"
+    }
+  ]
+}
