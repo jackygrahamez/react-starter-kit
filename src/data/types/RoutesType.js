@@ -10,12 +10,13 @@
 import {
   GraphQLObjectType as ObjectType,
   GraphQLString as StringType,
+  GraphQLList as ListType,
 } from 'graphql';
 
-const dataType = new ObjectType({
-  name: 'data',
+const childrenType = new ObjectType({
+  name: 'children',
   fields: {
-    articles: { type: StringType },
+    path: { type: StringType },
   },
 });
 
@@ -23,9 +24,7 @@ const RoutesType = new ObjectType({
   name: 'Routes',
   fields: {
     path: { type: StringType },
-    page: { type: StringType },
-    chunk: { type: StringType },
-    data: { type: dataType },
+    children: { type: new ListType(childrenType) },
   },
 });
 

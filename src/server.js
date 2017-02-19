@@ -23,6 +23,7 @@ import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import passport from './core/passport';
+import fetch from './core/fetch';
 import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
@@ -101,6 +102,22 @@ app.get('*', async (req, res, next) => {
         styles.forEach(style => css.add(style._getCss()));
       },
     };
+
+    const routeList = await fetch('/graphql', {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{routes{path,children{path}}}',
+      }),
+      credentials: 'include',
+    });
+    const routeData = await routeList.json();
+    if (!routeData || !routeData.data || !routeData.data.routes || !routeData.data.routes[0]) throw new Error('Failed to load the routes.');
+    // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
+    // console.log(JSON.stringify(routes, null, 2));
 
     const route = await UniversalRouter.resolve(routes, {
       path: req.path,

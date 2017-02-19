@@ -14,7 +14,7 @@ import RoutesType from '../types/RoutesType';
 // React.js News Feed (RSS)
 const url = 'http://localhost:3001/assets/ajax/routes.json';
 
-let items = [];
+let result = {};
 let lastFetchTask;
 let lastFetchTime = new Date(1970, 0, 1);
 
@@ -31,23 +31,23 @@ const routes = {
         .then(response => response.json())
         .then((data) => {
           if (data.status === 'ok') {
-            items = data.items;
+            result = data.result;
           }
 
-          return items;
+          return result;
         })
         .finally(() => {
           lastFetchTask = null;
         });
 
-      if (items.length) {
-        return items;
+      if (typeof result !== 'undefined') {
+        return result;
       }
 
       return lastFetchTask;
     }
 
-    return items;
+    return result;
   },
 };
 
