@@ -7,30 +7,49 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import React from 'react';
 import s from './Page.css';
+
+import Feedback from '../Feedback';
+import Footer from '../Footer';
+import Header from '../Header';
+import Layout from '../Layout';
+import Link from '../Link';
+import Navigation from '../Navigation';
+import Intro from '../Intro';
+
+const importedModules = {
+  Feedback,
+  Footer,
+  Header,
+  Layout,
+  Link,
+  Navigation,
+  Intro,
+};
 
 class Page extends React.Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
-    html: PropTypes.string.isRequired,
+    modules: React.PropTypes.arrayOf(React.PropTypes.shape({
+      module: React.PropTypes.string.isRequired,
+    })).isRequired,
   };
 
   render() {
-    const { title, html } = this.props;
+    const { modules } = this.props;
+    let key = 0;
+    const items = modules.map((item) => {
+      key += 1;
+      return React.createElement(importedModules[item.module], {
+        key,
+      });
+    });
     return (
       <div className={s.root}>
-        <div className={s.container}>
-          <h1>{title}</h1>
-          <div
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        </div>
+        {items}
       </div>
     );
   }
 }
 
-export default withStyles(s)(Page);
+export default Page;
