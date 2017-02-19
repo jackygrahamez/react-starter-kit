@@ -23,7 +23,7 @@ import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import passport from './core/passport';
-// import fetch from './core/fetch';
+import fetch from './core/fetch';
 import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
@@ -103,23 +103,27 @@ app.get('*', async (req, res, next) => {
       },
     };
 
-    // const routeList = await fetch('/graphql', {
-    //   method: 'post',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     query: '{routes{path,children{path}}}',
-    //   }),
-    //   credentials: 'include',
-    // });
-    // const routeData = await routeList.json();
+    const routeList = await fetch('/graphql', {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{routes{path,children{path}}}',
+      }),
+      credentials: 'include',
+    });
+    let routeData = await routeList.json();
+    if (routeData.data && routeData.data.routes) {
+      // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
+      routeData = routeData.data.routes[0];
+    }
     // if (!routeData || !routeData.data || !routeData.data.routes
     // || !routeData.data.routes[0]) throw new Error('Failed to load the routes.');
     // // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
     // // console.log(JSON.stringify(routes, null, 2));
-    const routeList = {
+    const customRoute = {
       path: '/',
       children: [{
         path: '/',
@@ -132,12 +136,13 @@ app.get('*', async (req, res, next) => {
       },
       ],
     };
-    routeList.children = routeList.children.map((item) => {
+    customRoute.children = routeData.children || customRoute.children;
+    customRoute.children = customRoute.children.map((item) => {
       item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
-      console.log(item);
+      // console.log(item);
       return item;
     });
-    const route = await UniversalRouter.resolve(routeList, {
+    const route = await UniversalRouter.resolve(customRoute, {
       path: req.path,
       query: req.query,
     });
