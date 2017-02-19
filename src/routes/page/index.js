@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 
 export default {
 
-  path: '/',
+  path: '*',
 
   async action() {
     // const data = await require.ensure([], require => require('./page.md'), 'about');
@@ -25,7 +25,6 @@ export default {
         },
       ],
     };
-
     return {
       title: data.title,
       chunk: 'page',

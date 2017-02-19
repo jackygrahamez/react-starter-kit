@@ -119,8 +119,25 @@ app.get('*', async (req, res, next) => {
     // || !routeData.data.routes[0]) throw new Error('Failed to load the routes.');
     // // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
     // // console.log(JSON.stringify(routes, null, 2));
-
-    const route = await UniversalRouter.resolve(routes, {
+    const routeList = {
+      path: '/',
+      children: [{
+        path: '/',
+      },
+      {
+        path: '/home',
+      },
+      {
+        path: '*',
+      },
+      ],
+    };
+    routeList.children = routeList.children.map((item) => {
+      item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
+      console.log(item);
+      return item;
+    });
+    const route = await UniversalRouter.resolve(routeList, {
       path: req.path,
       query: req.query,
     });
