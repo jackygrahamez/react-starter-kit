@@ -116,13 +116,8 @@ app.get('*', async (req, res, next) => {
     });
     let routeData = await routeList.json();
     if (routeData.data && routeData.data.routes) {
-      // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
       routeData = routeData.data.routes[0];
     }
-    // if (!routeData || !routeData.data || !routeData.data.routes
-    // || !routeData.data.routes[0]) throw new Error('Failed to load the routes.');
-    // // console.log(JSON.stringify(routeData.data.routes[0], null, 2));
-    // // console.log(JSON.stringify(routes, null, 2));
     const customRoute = {
       path: '/',
       children: [{
@@ -135,11 +130,11 @@ app.get('*', async (req, res, next) => {
         path: '*',
       },
       ],
+      action: routes.action,
     };
     customRoute.children = routeData.children || customRoute.children;
     customRoute.children = customRoute.children.map((item) => {
       item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
-      // console.log(item);
       return item;
     });
     const route = await UniversalRouter.resolve(customRoute, {
