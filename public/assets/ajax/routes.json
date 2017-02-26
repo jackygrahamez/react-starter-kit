@@ -3,7 +3,8 @@
   "result": [{
     "path": "/",
     "children": [{
-        "path": "/"
+        "path": "/",
+        "json-path": "/assets/ajax/home.json"
       },
       {
         "path": "/contact"

@@ -10,6 +10,7 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 import Page from '../../components/Page';
+import fetch from '../../core/fetch';
 
 export default {
 
@@ -17,14 +18,23 @@ export default {
 
   async action() {
     // const data = await require.ensure([], require => require('./page.md'), 'about');
-    const data = {
-      title: 'Page Title',
-      modules: [
-        {
-          module: 'Intro',
-        },
-      ],
-    };
+    console.log(this);
+    let data = {};
+    if (this['json-path']) {
+      const resp = await fetch('/assets/ajax/home.json');
+      data = await resp.json();
+      console.log(data);
+    } else {
+      data = data || {
+        title: 'Page Title',
+        modules: [
+          {
+            module: 'Intro',
+          },
+        ],
+      };
+    }
+
     return {
       title: data.title,
       chunk: 'page',

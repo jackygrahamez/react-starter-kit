@@ -45,6 +45,7 @@ function routeTest() {
           customRoute.children = routeList.children || customRoute.children;
           customRoute.children = customRoute.children.map((item) => {
             item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
+            console.log(item);
             return item;
           });
           resolve(customRoute);
