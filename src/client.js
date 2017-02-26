@@ -17,6 +17,7 @@ import history from './core/history';
 import App from './components/App';
 import { updateMeta } from './core/DOMUtils';
 import { ErrorReporter, deepForceUpdate } from './core/devUtils';
+import routeTest from './routeTest';
 
 // Global (context) variables that can be easily accessed from any React component
 // https://facebook.github.io/react/docs/context.html
@@ -105,26 +106,28 @@ async function onLocationChange(location, action) {
     // Traverses the list of routes in the order they are defined until
     // it finds the first route that matches provided URL path string
     // and whose action method returns anything other than `undefined`.
-    const route = await UniversalRouter.resolve(routes, {
-      path: location.pathname,
-      query: queryString.parse(location.search),
-    });
+    routeTest().then(async (customRoute) => {
+      const route = await UniversalRouter.resolve(customRoute, {
+        path: location.pathname,
+        query: queryString.parse(location.search),
+      });
 
     // Prevent multiple page renders during the routing process
-    if (currentLocation.key !== location.key) {
-      return;
-    }
+      if (currentLocation.key !== location.key) {
+        return;
+      }
 
-    if (route.redirect) {
-      history.replace(route.redirect);
-      return;
-    }
+      if (route.redirect) {
+        history.replace(route.redirect);
+        return;
+      }
 
-    appInstance = ReactDOM.render(
-      <App context={context}>{route.component}</App>,
+      appInstance = ReactDOM.render(
+        <App context={context}>{route.component}</App>,
       container,
       () => onRenderComplete(route, location),
     );
+    });
   } catch (error) {
     // Display the error in full-screen for development mode
     if (process.env.NODE_ENV !== 'production') {

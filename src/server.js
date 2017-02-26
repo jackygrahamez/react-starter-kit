@@ -23,10 +23,11 @@ import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
 import errorPageStyle from './routes/error/ErrorPage.css';
 import passport from './core/passport';
-import fetch from './core/fetch';
+// import fetch from './core/fetch';
 import models from './data/models';
 import schema from './data/schema';
-import routes from './routes';
+// import routes from './routes';
+import routeTest from './routeTest';
 import assets from './assets.json'; // eslint-disable-line import/no-unresolved
 import { port, auth } from './config';
 
@@ -102,67 +103,34 @@ app.get('*', async (req, res, next) => {
         styles.forEach(style => css.add(style._getCss()));
       },
     };
+    routeTest().then(async (customRoute) => {
+      const route = await UniversalRouter.resolve(customRoute, {
+        path: req.path,
+        query: req.query,
+      });
 
-    const routeList = await fetch('/graphql', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: '{routes{path,children{path}}}',
-      }),
-      credentials: 'include',
+      if (route.redirect) {
+        res.redirect(route.status || 302, route.redirect);
+        return;
+      }
+
+      const data = { ...route };
+      data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
+      data.styles = [
+        { id: 'css', cssText: [...css].join('') },
+      ];
+      data.scripts = [
+        assets.vendor.js,
+        assets.client.js,
+      ];
+      if (assets[route.chunk]) {
+        data.scripts.push(assets[route.chunk].js);
+      }
+
+      const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+      res.status(route.status || 200);
+      res.send(`<!doctype html>${html}`);      
     });
-    let routeData = await routeList.json();
-    if (routeData.data && routeData.data.routes) {
-      routeData = routeData.data.routes[0];
-    }
-    const customRoute = {
-      path: '/',
-      children: [{
-        path: '/',
-      },
-      {
-        path: '/home',
-      },
-      {
-        path: '*',
-      },
-      ],
-      action: routes.action,
-    };
-    customRoute.children = routeData.children || customRoute.children;
-    customRoute.children = customRoute.children.map((item) => {
-      item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
-      return item;
-    });
-    const route = await UniversalRouter.resolve(customRoute, {
-      path: req.path,
-      query: req.query,
-    });
-
-    if (route.redirect) {
-      res.redirect(route.status || 302, route.redirect);
-      return;
-    }
-
-    const data = { ...route };
-    data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
-    data.styles = [
-      { id: 'css', cssText: [...css].join('') },
-    ];
-    data.scripts = [
-      assets.vendor.js,
-      assets.client.js,
-    ];
-    if (assets[route.chunk]) {
-      data.scripts.push(assets[route.chunk].js);
-    }
-
-    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
-    res.status(route.status || 200);
-    res.send(`<!doctype html>${html}`);
   } catch (err) {
     next(err);
   }
