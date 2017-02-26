@@ -1,6 +1,8 @@
 import fetch from './core/fetch';
 /* eslint-disable global-require */
 
+const url = 'http://localhost:3001/assets/ajax/routes.json';
+
 const routes = {
 
   path: '/',
@@ -33,59 +35,26 @@ const customRoute = {
   action: routes.action,
 };
 
-async function routeTest() {
-  try {
-    const result = await fetch('/graphql', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: '{routes{path,children{path}}}',
-      }),
-      credentials: 'include',
-    });
-    let routeData = await result.json();
-    if (routeData.data && routeData.data.routes) {
-      routeData = routeData.data.routes[0];
-      customRoute.children = routeData.children || customRoute.children;
-      customRoute.children = customRoute.children.map((item) => {
-        item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
-        return item;
-      });
-      if (typeof customRoute) {
-        return customRoute;
-      }
-    } else {
-      const retry = await fetch('/graphql', {
-        method: 'post',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: '{routes{path,children{path}}}',
-        }),
-        credentials: 'include',
-      });
-      let routeDataRetry = await retry.json();
-      if (routeDataRetry.data && routeDataRetry.data.routes) {
-        routeDataRetry = routeDataRetry.data.routes[0];
-        customRoute.children = routeDataRetry.children || customRoute.children;
-        customRoute.children = customRoute.children.map((item) => {
-          item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
-          return item;
-        });
-        if (typeof customRoute) {
-          return customRoute;
+function routeTest() {
+  return new Promise((resolve, reject) => {
+    try {
+      fetch(url).then(response => response.json())
+      .then((routeData) => {
+        if (routeData && routeData.result && routeData.result[0]) {
+          const routeList = routeData.result[0];
+          customRoute.children = routeList.children || customRoute.children;
+          customRoute.children = customRoute.children.map((item) => {
+            item.action = routes.children[0].action; // eslint-disable-line no-param-reassign
+            return item;
+          });
+          resolve(customRoute);
         }
-      }
+      });
+    } catch (err) {
+      console.log('err', err);
+      reject(err);
     }
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
+  });
 }
 
 export default routeTest;
