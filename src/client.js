@@ -163,8 +163,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {
-  module.hot.accept('./routes', () => {
-    routes = require('./routes').default; // eslint-disable-line global-require
+  module.hot.accept('./components/Page/Page', () => {
+    routes = require('./components/Page/Page').default; // eslint-disable-line global-require
 
     if (appInstance) {
       try {
