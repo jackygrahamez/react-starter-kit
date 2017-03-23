@@ -18,7 +18,7 @@ class Intro extends React.Component {
   render() {
     return (
       <div className={s.root}>
-        <h1>Intro test</h1>
+        <h1>Intro test blah</h1>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-/**
+ /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *
  * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
@@ -17,7 +17,7 @@ function clean() {
     cleanDir('build/*', {
       nosort: true,
       dot: true,
-      ignore: ['build/.git', 'build/public'],
+      ignore: ['build/.git', 'build/public', 'build/node_modules'],
     }),
 
     cleanDir('build/public/*', {

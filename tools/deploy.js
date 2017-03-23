@@ -15,11 +15,11 @@ import run from './run';
 
 // GitHub Pages
 const remote = {
-  name: 'github',
-  url: 'https://github.com/<user>/<repo>.git',
-  branch: 'gh-pages',
-  website: 'https://<user>.github.io/<repo>/',
-  static: true,
+  name: 'react-starter-kit-build',
+  url: 'git@github.com:jackygrahamez/react-starter-kit-build.git',
+  branch: 'master',
+  website: 'https://github.com/jackygrahamez/react-starter-kit-build',
+  static: false,
 };
 
 // Azure Web Apps
