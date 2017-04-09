@@ -17,16 +17,29 @@ import App from '../App';
 import Layout from './Layout';
 
 describe('Layout', () => {
+  let wrapper;
 
-  it('renders children correctly', () => {
-    const wrapper = render(
+  before(function () {
+    wrapper = render(
       <App context={{ insertCss: () => {} }}>
         <Layout>
           <div className="child" />
         </Layout>
       </App>,
     );
-    expect(wrapper.find('div.child').length).to.eq(1);
+    // console.log(wrapper);
+  }); 
+
+  it('renders children correctly', () => {
+    // const wrapper = render(
+    //   <App context={{ insertCss: () => {} }}>
+    //     <Layout>
+    //       <div className="child" />
+    //     </Layout>
+    //   </App>,
+    // );
+    // console.log(wrapper);
+    // expect(wrapper.find('div.child').length).to.eq(1);
   });
 
 });

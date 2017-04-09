@@ -1,13 +1,13 @@
-const webpackConfig = require('./tools/webpack.config').default;
+const webpackConfig = require('./tools/webpack.config').default[0];
 
+// let commonsChunkPluginIndex = webpackConfig[0].plugins.findIndex(plugin => plugin.chunkNames);
+// webpackConfig[0].plugins.splice(commonsChunkPluginIndex, 1);
+// commonsChunkPluginIndex = webpackConfig[0].plugins.findIndex(plugin => plugin.chunkNames);
+// webpackConfig[0].plugins.splice(commonsChunkPluginIndex, 1);
 
-let commonsChunkPluginIndex = webpackConfig[0].plugins.findIndex(plugin => plugin.chunkNames);
-webpackConfig[0].plugins.splice(commonsChunkPluginIndex, 1);
-commonsChunkPluginIndex = webpackConfig[1].plugins.findIndex(plugin => plugin.chunkNames);
-webpackConfig[1].plugins.splice(commonsChunkPluginIndex, 1);
-
-
+// let module = webpackConfig;
 // console.log(webpackConfig);
+webpackConfig.module.rules.push({ test: /\.js$/, loader: 'babel-loader' })
 module.exports = function(config) {
     config.set({
 
@@ -37,7 +37,21 @@ module.exports = function(config) {
         //     // ... remainder of webpack configuration (or import)
         // },
 
-        webpack: webpackConfig,
+        // webpack: webpackConfig,
+        webpack: {
+          devtool: 'inline-source-map',
+          // module: {
+          //   loaders: [
+          //     { test: /\.js$/, loader: 'babel-loader' },
+          //     { test: /\.jsx?$/, loader: 'babel-loader' },
+          //     { test: /\.css/, loader: 'isomorphic-style-loader' },
+          //     // { loader: 'css-loader' },
+          //     // { test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/, loader: 'file-loader' },
+          //     // { test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/, loader: 'url-loader' }
+          //   ]
+          // }
+         module: webpackConfig.module 
+        },        
 
         webpackMiddleware: {
             // webpack-dev-middleware configuration
